@@ -1,7 +1,9 @@
 require('dotenv').config();
 const user = require("../db/models/user")
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 const generateToken = (payload) => {
     return jwt.sign(
@@ -11,14 +13,11 @@ const generateToken = (payload) => {
     );
   };
   
-const signUp = async (req, res, next) => {
+const signUp =catchAsync (async (req, res, next) => {
    const body = req.body
 
    if(!['owner','tenant'].includes(body.userType)) {
-    return res.status(400).json({
-        status: "failed",
-        message: "Invalid User Type."
-    })
+    throw new AppError("Invalid User Type.",400)
    }
 
   const newUser = await user.create({
@@ -33,6 +32,10 @@ const signUp = async (req, res, next) => {
     confirmPassword:body.confirmPassword,
   })
 
+  if(!newUser){
+    return next(new AppError("Failed to create the user",400))
+  }
+
   const result = newUser.toJSON()
 
   delete result.password;
@@ -42,37 +45,25 @@ const signUp = async (req, res, next) => {
     id: result.id
   });
 
-  if(!result){
-    return res.status(400).json({
-        status: "failed",
-        message: "Failed to create the user",
-    })
-  }
 
   return res.status(201).json({
     status:"success",
     data: result
   })
-}
+})
 
 
 
-const login = async (req, res, next) => {
+const login = catchAsync (async (req, res, next) => {
     const {email,password} = req.body;
 
     if (!email || !password) {
-      return  res.status(400).json({
-            status:"failed",
-            message: "Please provide email and password"
-        })
+        return next(new AppError("Please provide email and password",400))
     }
 
         const result = await user.findOne({where: {email}})
         if(!result || !(await bcrypt.compare(password, result.password))){
-           return res.status(401).json({
-                status:"failed",
-                message:"Incorrect email or password."
-            })
+            return next(new AppError("Incorrect email or password.",401))
         }
     
 
@@ -84,6 +75,6 @@ const login = async (req, res, next) => {
         status:"success",
         token
     })
-}
+})
 
 module.exports = {signUp, login}
