@@ -1,29 +1,74 @@
 'use strict';
 const {
-  Model
+  Model,
+  Sequelize,
+  DataTypes
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+
+const bcrypt = require('bcrypt');
+const sequelize = require('../../config/database');
+
+
+
+module.exports = sequelize.define('User', {
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: DataTypes.INTEGER
+  },
+  firstName: {
+    type: DataTypes.STRING
+  },
+  lastName: {
+    type: DataTypes.STRING
+  },
+  email: {
+    type: DataTypes.STRING
+  },
+  password: {
+    type: DataTypes.STRING
+  },
+  confirmPassword: {
+    type: DataTypes.VIRTUAL,
+    set(value) {
+      if(value==this.password){
+        const hashPassword = bcrypt.hashSync(value, 10)
+        this.setDataValue('password',hashPassword)
+      } else{
+        throw new Error ("Password and confirm password must be the same")
+      }
     }
-  }
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    contact: DataTypes.STRING,
-    dateOfBirth: DataTypes.DATE,
-    userType: DataTypes.ENUM('tenant', 'owner', 'admin')
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
-  return User;
-};
+  },
+  address: {
+    type: DataTypes.STRING
+  },
+  gender: {
+    type: DataTypes.ENUM('male', 'female', 'other')
+  },
+  dateOfBirth: {
+    type: DataTypes.DATE
+  },
+  userType: {
+    type: DataTypes.ENUM('tenant', 'owner', 'admin')
+  },
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE
+  },
+  deletedAt: {
+    type: DataTypes.DATE
+  },
+},
+{
+  paranoid:true,
+  freezeTableName : true,
+  modelName:'User'
+}
+)
+
+
