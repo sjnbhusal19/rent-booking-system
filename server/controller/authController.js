@@ -1,6 +1,7 @@
 require('dotenv').config();
 const user = require("../db/models/user")
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const generateToken = (payload) => {
     return jwt.sign(
@@ -54,4 +55,35 @@ const signUp = async (req, res, next) => {
   })
 }
 
-module.exports = {signUp}
+
+
+const login = async (req, res, next) => {
+    const {email,password} = req.body;
+
+    if (!email || !password) {
+      return  res.status(400).json({
+            status:"failed",
+            message: "Please provide email and password"
+        })
+    }
+
+        const result = await user.findOne({where: {email}})
+        if(!result || !(await bcrypt.compare(password, result.password))){
+           return res.status(401).json({
+                status:"failed",
+                message:"Incorrect email or password."
+            })
+        }
+    
+
+    const token= generateToken({
+        id:result.id,
+    });
+
+    return res.json({
+        status:"success",
+        token
+    })
+}
+
+module.exports = {signUp, login}
