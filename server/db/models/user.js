@@ -1,8 +1,7 @@
 'use strict';
 const {
   Model,
-  Sequelize,
-  DataTypes
+  Sequelize
 } = require('sequelize');
 
 const bcrypt = require('bcrypt');
@@ -16,22 +15,25 @@ module.exports = sequelize.define('User', {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
   },
   firstName: {
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   },
   lastName: {
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   },
   email: {
-    type: DataTypes.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
   },
+  
   password: {
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   },
   confirmPassword: {
-    type: DataTypes.VIRTUAL,
+    type: Sequelize.VIRTUAL,
     set(value) {
       if(value==this.password){
         const hashPassword = bcrypt.hashSync(value, 10)
@@ -42,27 +44,27 @@ module.exports = sequelize.define('User', {
     }
   },
   address: {
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   },
   gender: {
-    type: DataTypes.ENUM('male', 'female', 'other')
+    type: Sequelize.ENUM('male', 'female', 'other')
   },
   dateOfBirth: {
-    type: DataTypes.DATE
+    type: Sequelize.DATE
   },
   userType: {
-    type: DataTypes.ENUM('tenant', 'owner', 'admin')
+    type: Sequelize.ENUM('tenant', 'owner', 'admin')
   },
   createdAt: {
     allowNull: false,
-    type: DataTypes.DATE
+    type: Sequelize.DATE
   },
   updatedAt: {
     allowNull: false,
-    type: DataTypes.DATE
+    type: Sequelize.DATE
   },
   deletedAt: {
-    type: DataTypes.DATE
+    type: Sequelize.DATE
   },
 },
 {
