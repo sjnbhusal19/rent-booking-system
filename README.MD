@@ -40,3 +40,6 @@ seeders/
 ## by force
 npx sequelize-cli init --force
 
+
+## Winston Logger for logging any error in the production mood (remainder)
+

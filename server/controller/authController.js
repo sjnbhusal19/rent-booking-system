@@ -77,4 +77,7 @@ const login = catchAsync (async (req, res, next) => {
     })
 })
 
+
+const authentication = catchAsync
+
 module.exports = {signUp, login}
