@@ -1,8 +1,10 @@
+// src/pages/Login.jsx
 import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom"; // 👈 React Router link
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 // Validation schema
 const loginSchema = yup.object().shape({
@@ -11,18 +13,26 @@ const loginSchema = yup.object().shape({
 });
 
 const Login = () => {
+  const { login } = useAuth(); // 👈 use login from context
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
-    mode: "onBlur", // 👈 shows validation error on blur
+    mode: "onBlur",
   });
 
   const onSubmit = (data) => {
-    console.log("Login Data:", data);
-    alert("Login successful!");
+    const success = login(data.email, data.password);
+    if (success) {
+      alert("Login successful!");
+      navigate("/profile");
+    } else {
+      alert("Invalid email or password");
+    }
   };
 
   return (
