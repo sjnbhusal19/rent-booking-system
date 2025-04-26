@@ -7,9 +7,11 @@ const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controller/errorController')
 
 const app = express()
+const cors = require('cors');
 const port = process.env.APP_PORT || 4000
 
 app.use(express.json())
+app.use(cors());
 
 //all routes
 app.use('/api/auth', authRouter);

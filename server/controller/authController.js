@@ -77,7 +77,24 @@ const login = catchAsync (async (req, res, next) => {
     })
 })
 
+const checkEmailExists = catchAsync(async (req, res, next) => {
+ // console.log(req.body)
+  const { email } = req.body; // 👈 get email from URL query
+   //console.log(email)
+  if (!email) {
+    return next(new AppError("Email is required", 400));
+  }
+
+  const existingUser = await user.findOne({ where: { email } });
+
+  if (existingUser) {
+    return res.status(200).json({ exists: true });
+  } else {
+    return res.status(200).json({ exists: false });
+  }
+});
+
 
 const authentication = catchAsync
 
-module.exports = {signUp, login}
+module.exports = {signUp, login,checkEmailExists}

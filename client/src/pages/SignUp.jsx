@@ -2,6 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -28,10 +30,48 @@ const SignUp = () => {
     mode: "onBlur", 
   });
   
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    alert("Form submitted successfully!");
+  const navigate = useNavigate();
+
+  // const onSubmit = (data) => {
+  //   console.log("Form Data:", data);
+  //   alert("Form submitted successfully!");
+  // };
+
+  const onSubmit = async (data) => {
+    try {
+      // 🔥 Send email in body with POST
+      const res = await axios.post(`http://localhost:4000/api/auth/check-email`, {
+        email: data.email
+      });
+  
+      if (res.data.exists) {
+        alert("Email already exists! Please use a different one.");
+        return;
+      }
+  
+      // Proceed to signup if email doesn't exist
+      const response = await axios.post("http://localhost:4000/api/auth/signup/", {
+        userType: data.registeredAs,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        address: data.address,
+        gender: data.gender,
+        dateOfBirth: data.dob
+      });
+  
+      alert("Signup successful!");
+      navigate("/login");
+  
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
+  
+  
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">

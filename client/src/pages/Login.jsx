@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,11 +24,12 @@ const Login = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    const success = login(data.email, data.password);
+  const onSubmit = async (data) => {
+    const success = await login(data.email, data.password); // Ensure login finishes before proceeding
     if (success) {
       alert("Login successful!");
-      navigate("/profile");
+      console.log("Navigating to profile...");
+      navigate("/profile"); // Redirect to profile page
     } else {
       alert("Invalid email or password");
     }
