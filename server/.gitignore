@@ -1,0 +1,74 @@
+# ====================================
+# Node (frontend & backend)
+# ====================================
+/node_modules/
+/.pnpm-debug.log*
+/npm-debug.log*
+/yarn-debug.log*
+/yarn-error.log*
+
+# ====================================
+# Environment variables
+# ====================================
+.env
+.env.local
+.env.*.local
+
+# ====================================
+# Logs & runtime data
+# ====================================
+/logs/
+/*.log
+/pids/
+/*.pid
+/*.seed-data
+
+# ====================================
+# Build output (frontend & backend)
+# ====================================
+/dist/
+/build/
+/out/
+
+# ====================================
+# Frontend: Vite
+# ====================================
+/node_modules/.vite/
+
+# ====================================
+# Testing & coverage
+# ====================================
+/coverage/
+/.nyc_output/
+
+# ====================================
+# Caches
+# ====================================
+/.cache/
+/.v8/
+/.eslintcache
+*.tsbuildinfo
+/.parcel-cache
+
+# ====================================
+# Sequelize / Database
+# ====================================
+# (if you ever run SQLite locally)
+*.sqlite
+*.sqlite3
+# Postgres data directory (if you’re using a local PG data folder)
+.pgdata/
+
+# ====================================
+# OS & editor
+# ====================================
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDE settings
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
