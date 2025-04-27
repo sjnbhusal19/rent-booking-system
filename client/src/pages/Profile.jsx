@@ -11,7 +11,7 @@ const Profile = () => {
   
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow text-center">
-      <h1 className="text-2xl font-bold mb-4">Welcome, {user.firstName} {user.lastName}</h1>
+      <h1 className="text-2xl font-bold mb-4">Welcome, {user.firstName}  </h1>
       
       <button
         onClick={logout}
