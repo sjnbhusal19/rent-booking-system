@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.status === "success") {
+       // console.log(response.data.user)
         // Assuming the API returns user details on successful login
         setUser(response.data.user);
         return true;
