@@ -70,10 +70,14 @@ const login = catchAsync (async (req, res, next) => {
     const token= generateToken({
         id:result.id,
     });
+    
+    const { password: _, ...userData } = result.toJSON(); 
+
 
     return res.json({
         status:"success",
-        token
+        token,
+        user: userData,
     })
 })
 
