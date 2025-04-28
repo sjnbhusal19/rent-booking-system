@@ -28,8 +28,7 @@ const Login = () => {
     const success = await login(data.email, data.password); // Ensure login finishes before proceeding
     if (success) {
       alert("Login successful!");
-     // console.log("Navigating to profile...");
-      navigate("/profile"); // Redirect to profile page
+      navigate("/profile"); 
     } else {
       alert("Invalid email or password");
     }
